@@ -1,0 +1,22 @@
+{
+    "parser": "@babel/eslint-parser",
+    "extends": [
+        "react-app",
+        "plugin:flowtype/recommended"
+    ],
+    "plugins": [
+        "flowtype"
+    ],
+    "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+    },
+    "parserOptions": {
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "rules": {
+        // Add any specific ESLint rules you'd like to override here
+    }
+}
