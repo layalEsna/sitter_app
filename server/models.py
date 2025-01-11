@@ -39,4 +39,11 @@ class PetOwner(db.Model, SerializerMixin):
         if len(user_name) < 5:
             raise ValueError('Username must be at least 5 characters long.')
         return user_name
+    
+    serialize_only = ('id', 'user_name', '_hash_password')
+
+    def to_dict(self):
+        return{
+            col: getattr(self, col) for col in self.serialize_only
+        }
 
