@@ -23,11 +23,20 @@ class PetOwner(db.Model, SerializerMixin):
     @password.setter
     def password(self, password):
         pattern = re.compile(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$')
-        if not pattern.match(password):
+        if not password or not isinstance(password, str):
+            raise ValueError('Password is required and must be string.')
+        if not pattern.match(password) or len(password) < 8:
             raise ValueError('Password must be at least 8 characters long. It must include at least 1 lowercase, 1 uppercase letter, and at least 1 (!@#$%^&*)')
         self._hash_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
         return bcrypt.check_password_hash(self._hash_password, password)
     
-    
+    @validates('user_name')
+    def user_name_validate(self, user_name):
+        if not user_name or not isinstance(user_name, str):
+            raise ValueError('Username is required and must be a string.')
+        if len(user_name) < 5:
+            raise ValueError('Username must be at least 5 characters long.')
+        return user_name
+
