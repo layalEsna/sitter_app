@@ -32,10 +32,15 @@ def signup():
     user_name = data.get('user_name')
     password = data.get('password')
 
-    if not all([user_name, password]):
+    confirm_password = data.get('confirm_password')
+
+
+    if not all([user_name, password, confirm_password]):
         return jsonify({'error': 'All fields are required'}), 400
     if PetOwner.query.filter(PetOwner.user_name == user_name).first():
         return jsonify({'error': 'Username already exists. Please choose another one.'}), 400
+    if password != confirm_password:
+       return jsonify({'error': 'Passwords do not match'}), 400
     
     new_user = PetOwner(
         user_name = user_name,

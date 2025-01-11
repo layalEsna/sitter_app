@@ -15,7 +15,7 @@ class PetOwner(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False, unique=True)
     _hash_password = db.Column(db.String, nullable=False)
-
+    
     @property
     def password(self):
         raise AttributeError('Password is not a readable attribute')
@@ -32,6 +32,7 @@ class PetOwner(db.Model, SerializerMixin):
     def check_password(self, password):
         return bcrypt.check_password_hash(self._hash_password, password)
     
+        
     @validates('user_name')
     def user_name_validate(self, user_name):
         if not user_name or not isinstance(user_name, str):
