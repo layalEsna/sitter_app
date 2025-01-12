@@ -4,7 +4,7 @@ import { HashRouter, useNavigate } from 'react-router-dom'
 import * as Yup from 'yup';
 
 function SignupForm() {
-    
+
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
 
     const formik = useFormik({
@@ -24,9 +24,9 @@ function SignupForm() {
             confirm_password: Yup.string()
                 .oneOf([Yup.ref('password'), null], 'Password must match.')
                 .required('Confirm password is required.')
-            
+
         }),
-        
+
         onSubmit: (values) => {
             fetch('/signup', {
                 method: 'POST',
@@ -47,14 +47,66 @@ function SignupForm() {
 
         }
 
-         
+
     })
+    return (
+        <div>
+            <h1>Create an Acount</h1>
+
+            <form onSubmit={formik.handleSubmit}>
+                <div>
+                    <label htmlFor='user_name'>username</label>
+                    <input
+                        id='user_name'
+                        name='user_name'
+                        type='text'
+                        value={formik.values.user_name}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                    />
+                    {formik.errors.user_name && formik.touched.user_name && (
+                        <div>{formik.errors.user_name}</div>
+                    )}
+                </div>
+                <br />
+                <div>
+                    <label htmlFor='password'>password</label>
+                    <input
+                        id='password'
+                        name='password'
+                        type='password'
+                        value={formik.values.password}
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+                    />
+                    {formik.errors.password && formik.touched.password && (
+                        <div>{formik.errors.password}</div>
+                    )}
+                </div>
+                <br />
+                <div>
+                    <label htmlFor='confirm_password'>confirm password</label>
+                    <input
+                        id='confirm_password'
+                        name='confirm_password'
+                        type='password'
+                        value={formik.values.confirm_password}
+                        onBlur={formik.handleBlur}
+                        onChange={formik.handleChange}
+
+                    />
+                    {formik.errors.confirm_password && formik.touched.confirm_password && (
+                        <div>{formik.errors.confirm_password}</div>
+                    )}
+                </div>
+                <br />
+                <div><button type='submit'>signup</button></div>
+
+            </form>
+        </div>
+    )
 
 }
 
 export default SignupForm
 
-// "Add Formik validation schema and initial values for signup form."
-// Implement onSubmit function with fetch request for signup
-
-// "Implement onSubmit function with fetch request to handle signup form submission."
