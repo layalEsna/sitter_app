@@ -54,3 +54,8 @@ function SignupForm() {
 }
 
 export default SignupForm
+
+// "Add Formik validation schema and initial values for signup form."
+// Implement onSubmit function with fetch request for signup
+
+// "Implement onSubmit function with fetch request to handle signup form submission."
