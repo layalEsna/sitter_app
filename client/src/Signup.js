@@ -26,31 +26,29 @@ function SignupForm() {
                 .required('Confirm password is required.')
             
         }),
-        // 
+        
+        // onSubmit: (values) => {
+        //     fetch('/signup', {
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+
+        //         },
+        //         body: JSON.stringify(values)
+        //     })
+        //         .then(res => {
+        //             if (!res.ok) {
+        //                 throw new Error('Failed to signup.')
+        //             }
+        //             return res.json()
+        //         })
+        //         .then(data => console.log(data))
+        //         .catch(e => console.error('Network or server error', e))
+
+        // }
 
 
-        onSubmit: (values) => {
-            fetch('/signup', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-
-                },
-                body: JSON.stringify(values)
-            })
-                .then(res => {
-                    if (!res.ok) {
-                        throw new Error('Failed to signup.')
-                    }
-                    return res.json()
-                })
-                .then(data => console.log(data))
-                .catch(e => console.error('Network or server error', e))
-
-        }
-
-
-        // 
+         
     })
 
 }
