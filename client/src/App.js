@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom'; // Import BrowserRouter
 
 import SignupForm from './Signup';
+import LoginForm from './Login';
 
 function App() {
     return (
@@ -9,8 +10,8 @@ function App() {
             <div>
                 <h1>Hello, React!</h1>
                 <Routes>
-                    <Route path="/" element={<SignupForm />} />
-                    {/* Add other routes here */}
+                    <Route path="/signup" element={<SignupForm />} />
+                    <Route path="/login" element={<LoginForm/>} />
                 </Routes>
             </div>
         </BrowserRouter>
