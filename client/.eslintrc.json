@@ -13,10 +13,12 @@
         "node": true
     },
     "parserOptions": {
-        "ecmaVersion": 12,
+        "ecmaVersion": 12,  // Adjust based on your requirements (e.g., 2020, 2021)
         "sourceType": "module"
     },
     "rules": {
-        // Add any specific ESLint rules you'd like to override here
+        // You can add specific ESLint rules to override here, for example:
+        // "no-console": "warn",
+        // "react/prop-types": "off"
     }
 }
