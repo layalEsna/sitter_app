@@ -109,8 +109,8 @@ class Appointment(db.Model, SerializerMixin):
             raise ValueError('Duration must be between 1 and 10 inclusive.')
         return duration
     
-    # serialize_only = ('id', 'date', 'duration')
-    # def to_dict(self):
-    #     return {
-    #         field: getattr(self, field) for field in self.serialize_only
-    #     }
+    serialize_only = ('id', 'date', 'duration')
+    def to_dict(self):
+        return {
+            field: getattr(self, field) for field in self.serialize_only
+        }
