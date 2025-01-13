@@ -60,6 +60,30 @@ def signup():
      return jsonify({'error': 'Server or network error.'}), 500
 
 
+@app.route('/login', methods=['POST'])
+def login():
+  try:
+    data = request.get_json()
+    user_name = data.get('user_name')
+    password = data.get('password')
+
+
+    if not all([user_name, password]):
+        return jsonify({'error': 'All fields are required'}), 400
+    user = PetOwner.query.filter(PetOwner.user_name==user_name).first()
+    if user and user.check_password(password):
+       session['user_id'] = user.id
+       return jsonify({'message': 'Successful login.'}), 200
+    return jsonify({'error': 'Username or password not found.'}), 400
+  except Exception as e:
+     logging.error(f'An error occurred during login: {e}')
+     return jsonify({'error': 'Network or server error.'}), 500
+
+   
+
+
+    
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
 

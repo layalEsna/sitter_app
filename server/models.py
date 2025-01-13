@@ -10,7 +10,7 @@ from sqlalchemy.orm import validates
 from datetime import datetime, date
 import re
 
-# secondary
+
 
 db = SQLAlchemy()
 bcrypt = Bcrypt() 
