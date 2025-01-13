@@ -35,7 +35,7 @@ class PetOwner(db.Model, SerializerMixin):
         pattern = re.compile(r'^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$')
         if not password or not isinstance(password, str):
             raise ValueError('Password is required and must be string.')
-        if not pattern.match(password) or len(password) < 8:
+        if not pattern.match(password):
             raise ValueError('Password must be at least 8 characters long. It must include at least 1 lowercase, 1 uppercase letter, and at least 1 (!@#$%^&*)')
         self._hash_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
