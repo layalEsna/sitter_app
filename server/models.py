@@ -129,4 +129,28 @@ class Appointment(db.Model, SerializerMixin):
         }
     
 
-    # pet_owners_id pet_owners_id
+class Pet(db.Model, SerializerMixin):
+    __tablename__ = 'pets'
+
+    pets = ['cat', 'dog', 'bird']
+
+    id = db.Column(db.Integer, primary_key=True)
+    pet_name = db.Column(db.String, nullable=False, unique=True)           
+    pet_type = db.Column(db.String, nullable=False, unique=True)  
+
+    @validates('pet_name')
+    def pet_name_validate(self, key, pet_name):
+        if not pet_name or not isinstance(pet_name, str):
+            raise ValueError('Pet name is required and must be a string.')
+        return pet_name
+    
+    @validates('pet_type')
+    def pet_type_validate(self, key, pet_type):
+
+        if not pet_type or pet_type not in self.pets:
+            raise ValueError('Pet type must be one of: cat, dog, bird')
+        return pet_type
+    
+
+             
+
