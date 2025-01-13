@@ -86,4 +86,31 @@ class PetSitter(db.Model, SerializerMixin):
             field: getattr(self, field) for field in self.serialize_only
         }
     
-               
+class Appointment(db.Model, SerializerMixin):
+    __tablename__ = 'appointments'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.date, nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
+
+    @validates('date')
+    def date_validate(self, key, value):
+        if not value or not isinstance(value, date):
+            raise ValueError('Date is required and must be valid date.')
+        if value < datetime.now().date():
+            raise ValueError('Date must be today or in the future.')
+        return value
+    
+    @validates('duration')
+    def duration_validate(self, key, duration):
+        if not duration or not isinstance(duration, int):
+            raise ValueError('Duration is required and must be an integer.')
+        if duration < 1 or duration > 10:
+            raise ValueError('Duration must be between 1 and 10 inclusive.')
+        return duration
+    
+    # serialize_only = ('id', 'date', 'duration')
+    # def to_dict(self):
+    #     return {
+    #         field: getattr(self, field) for field in self.serialize_only
+    #     }
