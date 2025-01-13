@@ -6,6 +6,8 @@ import  pgeocode
 from datetime import datetime, date
 import re
 
+
+
 db = SQLAlchemy()
 bcrypt = Bcrypt() 
 
@@ -34,7 +36,7 @@ class PetOwner(db.Model, SerializerMixin):
     
         
     @validates('user_name')
-    def user_name_validate(self, user_name):
+    def user_name_validate(self, key, user_name):
         if not user_name or not isinstance(user_name, str):
             raise ValueError('Username is required and must be a string.')
         if len(user_name) < 5:
@@ -47,4 +49,34 @@ class PetOwner(db.Model, SerializerMixin):
         return{
             col: getattr(self, col) for col in self.serialize_only
         }
+    
 
+class PetSitter(db.Model, SerializerMixin):
+    __tablename__ = 'pet_sitters'
+
+    id = db.Column(db.Integer, primery_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)           
+    location = db.Column(db.String, nullable=False)
+    price = db.Column(db.nteger, nullable=False)
+
+    @validates('name')
+    def name_validate(self, key, name):
+        if not name or not isinstance(name, str):
+            raise ValueError('Name is required and must be string.')
+        return name
+    
+    @validates('location')
+    def location_validate(self, key, location):
+        if not location or not isinstance(location, str):
+            raise ValueError('Location is required and must be string.')
+        return location
+    
+    @validates('price')
+    def price_validate(self, key, price):
+        if not price or not isinstance(price, int):
+            raise ValueError('price is required and must be integer.')
+        if price < 50 or price > 80:
+            raise ValueError('Price must be between 50 and 80 inclusive.')
+        return price
+    
+               

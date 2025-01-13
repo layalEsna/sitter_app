@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify,session
 import logging
 
 from flask_migrate import Migrate
-from models import db, bcrypt, PetOwner, PetSitter , Appointment
+from models import db, bcrypt, PetOwner
 from datetime import date
 
 from flask_cors import CORS
@@ -13,10 +13,12 @@ CORS(app, origins=["http://localhost:3000"])
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+app.config['SECRET_KEY'] = 'your_secret_key'
 db.init_app(app)
 bcrypt.init_app(app)
 
 migrate = Migrate(app, db)  
+app.config['DEBUG'] = True
 
 
 
@@ -58,5 +60,7 @@ def signup():
      return jsonify({'error': 'Server or network error.'}), 500
 
 
+if __name__ == "__main__":
+    app.run(debug=True, port=5000)
 
 
