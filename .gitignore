@@ -1,1 +1,26 @@
 client/node_modules/public-encrypt/test/test_rsa_privkey.pem
+# Node modules (client and server)
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build directories (client and server)
+client/build/
+server/build/
+
+# Log files
+*.log
+
+# Environment variables
+*.env
+
+# Cache files (such as from npm or other package managers)
+client/node_modules/.cache/
+server/node_modules/.cache/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Files from Git LFS
+*.pack
