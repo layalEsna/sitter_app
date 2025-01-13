@@ -54,29 +54,36 @@ class PetOwner(db.Model, SerializerMixin):
 class PetSitter(db.Model, SerializerMixin):
     __tablename__ = 'pet_sitters'
 
-    id = db.Column(db.Integer, primery_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)           
     location = db.Column(db.String, nullable=False)
-    price = db.Column(db.nteger, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
 
     @validates('name')
     def name_validate(self, key, name):
         if not name or not isinstance(name, str):
-            raise ValueError('Name is required and must be string.')
+            raise ValueError('Name is required and must be a string.')
         return name
     
     @validates('location')
     def location_validate(self, key, location):
         if not location or not isinstance(location, str):
-            raise ValueError('Location is required and must be string.')
+            raise ValueError('Location is required and must be a string.')
         return location
     
     @validates('price')
     def price_validate(self, key, price):
         if not price or not isinstance(price, int):
-            raise ValueError('price is required and must be integer.')
+            raise ValueError('price is required and must be an integer.')
         if price < 50 or price > 80:
             raise ValueError('Price must be between 50 and 80 inclusive.')
         return price
+    
+    serialize_only = ('id', 'name', 'location', 'price')
+
+    def to_dict(self):
+        return {
+            field: getattr(self, field) for field in self.serialize_only
+        }
     
                
