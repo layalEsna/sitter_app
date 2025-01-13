@@ -1,4 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import ForeignKey
+
+
 from flask_bcrypt import Bcrypt
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
@@ -6,7 +9,7 @@ import  pgeocode
 from datetime import datetime, date
 import re
 
-
+# secondary
 
 db = SQLAlchemy()
 bcrypt = Bcrypt() 
@@ -17,6 +20,8 @@ class PetOwner(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String, nullable=False, unique=True)
     _hash_password = db.Column(db.String, nullable=False)
+
+    appointments = db.relationship('Appointment', back_populates='pet_owner', cascade='all, delete-orphan')
     
     @property
     def password(self):
@@ -43,7 +48,7 @@ class PetOwner(db.Model, SerializerMixin):
             raise ValueError('Username must be at least 5 characters long.')
         return user_name
     
-    serialize_only = ('id', 'user_name', '_hash_password')
+    serialize_only = ('id', 'user_name')
 
     def to_dict(self):
         return{
@@ -58,6 +63,8 @@ class PetSitter(db.Model, SerializerMixin):
     name = db.Column(db.String, nullable=False, unique=True)           
     location = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer, nullable=False)
+
+    appointments = db.relationship('Appointment', back_populates='pet_sitter', cascade='all, delete-orphan', )
 
     @validates('name')
     def name_validate(self, key, name):
@@ -90,15 +97,21 @@ class Appointment(db.Model, SerializerMixin):
     __tablename__ = 'appointments'
 
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.date, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
     duration = db.Column(db.Integer, nullable=False)
+
+    pet_owners_id = db.Column(db.Integer, ForeignKey('pet_owners.id'), nullable=False)
+    pet_sitters_id = db.Column(db.Integer, ForeignKey('pet_sitters.id'), nullable=False)
+
+    pet_owner = db.relationship('PetOwner', back_populates='appointments')
+    pet_sitter = db.relationship('PetSitter', back_populates='appointments')
 
     @validates('date')
     def date_validate(self, key, value):
-        if not value or not isinstance(value, date):
-            raise ValueError('Date is required and must be valid date.')
-        if value < datetime.now().date():
-            raise ValueError('Date must be today or in the future.')
+        if not value or not isinstance(value, datetime):
+            raise ValueError('Date is required and must be valid datetime.')
+        if value < datetime.now():
+            raise ValueError('Date and time must be in the future.')
         return value
     
     @validates('duration')
@@ -109,8 +122,11 @@ class Appointment(db.Model, SerializerMixin):
             raise ValueError('Duration must be between 1 and 10 inclusive.')
         return duration
     
-    serialize_only = ('id', 'date', 'duration')
+    serialize_only = ('id', 'date', 'duration', 'pet_owners_id', 'pet_sitters_id')
     def to_dict(self):
         return {
             field: getattr(self, field) for field in self.serialize_only
         }
+    
+
+    # pet_owners_id pet_owners_id
