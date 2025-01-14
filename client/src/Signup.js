@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
+// import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup';
 
 function SignupForm() {
     const navigate = useNavigate()
+    const [errorMessage, setErrorMessage] = useState('')
 
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
 
@@ -43,22 +45,31 @@ function SignupForm() {
                     }
                     return res.json()
                 })
-                .then(data => console.log(data))
-                navigate('/sitters')
 
-                .catch(e => console.error('Network or server error', e))
 
+                .then(data => {
+                    if (data.error) {
+                        setErrorMessage(data.error)
+                    } else {
+                        console.log('User signed up successfully:', data)
+                        navigate('/sitters')
+                    }
+                })
+
+                .catch(e => {
+                    setErrorMessage(e.message)
+                    console.error('Network or server error', e)
+                })
         }
     })
 
-    // function handleSubmit(e) {
-    //     e.prevantDefault()
-    //     navigate('/sitters')
-    // }
-
     return (
         <div>
+
             <h1>Create an Acount</h1>
+
+
+            {errorMessage && <div className='error'>{errorMessage}</div>}
 
             <form onSubmit={formik.handleSubmit}>
                 <div>
@@ -72,7 +83,7 @@ function SignupForm() {
                         onBlur={formik.handleBlur}
                     />
                     {formik.errors.user_name && formik.touched.user_name && (
-                        <div>{formik.errors.user_name}</div>
+                        <div className='error'>{formik.errors.user_name}</div>
                     )}
                 </div>
                 <br />
@@ -87,7 +98,7 @@ function SignupForm() {
                         onChange={formik.handleChange}
                     />
                     {formik.errors.password && formik.touched.password && (
-                        <div>{formik.errors.password}</div>
+                        <div className='error'>{formik.errors.password}</div>
                     )}
                 </div>
                 <br />
@@ -103,13 +114,18 @@ function SignupForm() {
 
                     />
                     {formik.errors.confirm_password && formik.touched.confirm_password && (
-                        <div>{formik.errors.confirm_password}</div>
+                        <div className='error'>{formik.errors.confirm_password}</div>
                     )}
                 </div>
                 <br />
                 <div><button type='submit'>signup</button></div>
 
             </form>
+            <br />
+            <div>
+                <h3>Already have an account?</h3>
+                <button onClick={()=> navigate('/login')}>login</button>
+            </div>
         </div>
     )
 

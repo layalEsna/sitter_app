@@ -1,11 +1,11 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { HashRouter, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup';
 
 function LoginForm() {
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
-
+    const navigate = useNavigate()
     const formik = useFormik({
         initialValues: {
             user_name: '',
@@ -33,11 +33,25 @@ function LoginForm() {
             })
                 .then(res => {
                     if (!res.ok) {
-                        throw new Error('Failed to login.')
+                        throw new Error('Failed to loginn.')
                     }
                     return res.json()
                 })
-                .then(data => console.log(data))
+                .then((data) => {
+                    if(data.success){
+                        navigate('/sitters')
+                    } else {
+                        alert(`Login failed: ${data.message}`)
+                    }
+                    
+
+                    // if (data.message === 'Successful login') {
+                    //     navigate('/sitters')
+                    // } else {
+                    //     alert(`Login failed: ${data.message}` )
+                    // }
+                })
+
                 .catch(e => console.error('Network or server error', e))
 
         }
@@ -60,7 +74,7 @@ function LoginForm() {
                         onBlur={formik.handleBlur}
                     />
                     {formik.errors.user_name && formik.touched.user_name && (
-                        <div>{formik.errors.user_name}</div>
+                        <div className='error'>{formik.errors.user_name}</div>
                     )}
                 </div>
                 <br />
@@ -75,7 +89,7 @@ function LoginForm() {
                         onChange={formik.handleChange}
                     />
                     {formik.errors.password && formik.touched.password && (
-                        <div>{formik.errors.password}</div>
+                        <div className='error'>{formik.errors.password}</div>
                     )}
                 </div>
                 <br />
@@ -83,8 +97,21 @@ function LoginForm() {
                 <div><button type='submit'>login</button></div>
 
             </form>
+
+
+
+            
+
+
+
+
+
         </div>
     )
+
+
+
+
 
 }
 
