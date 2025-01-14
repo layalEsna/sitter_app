@@ -44,12 +44,6 @@ function LoginForm() {
                         alert(`Login failed: ${data.message}`)
                     }
                     
-
-                    // if (data.message === 'Successful login') {
-                    //     navigate('/sitters')
-                    // } else {
-                    //     alert(`Login failed: ${data.message}` )
-                    // }
                 })
 
                 .catch(e => console.error('Network or server error', e))

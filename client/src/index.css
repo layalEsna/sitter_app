@@ -1,4 +1,83 @@
 /* src/index.css */
-body {
+/* body {
     font-family: Arial, sans-serif;
-}
+} */
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+      monospace;
+  }
+  
+  form {
+    background-color: beige;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgb(0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    margin-left: 20px;
+  }
+  
+  h1 {
+    margin-left: 150px;
+    margin-bottom: 1.5rem;
+    color: rgb(32, 82, 84);
+  }
+  
+  div {
+    margin-bottom: 1.2 rem;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #555;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 0.8rem;
+    margin: 0.3rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  input[type='password'] {
+    font-family: sans-serif;
+  }
+  
+  button {
+    width: 100%;
+    padding: 0.8rem;
+    
+    background-color: #7685a3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #857add;
+  }
+  input:focus,
+  select:focus {
+    outline: none;
+    border-color: #6c5ce7;
+  }
+  .error {
+    color: red;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+  }
