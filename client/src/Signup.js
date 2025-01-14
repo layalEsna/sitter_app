@@ -5,9 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup';
 
 function SignupForm() {
+    // const { confirm_password, ...signupData } = values
     const navigate = useNavigate()
     const [errorMessage, setErrorMessage] = useState('')
-
+    
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
 
     const formik = useFormik({
@@ -31,35 +32,71 @@ function SignupForm() {
         }),
 
         onSubmit: (values) => {
+
+            console.log('Submitting form values:', values);
+
+
             fetch('http://localhost:5000/signup', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
-
+                    'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(values)
+                body: JSON.stringify(values),
             })
-                .then(res => {
+                .then((res) => {
                     if (!res.ok) {
-                        throw new Error('Failed to signup.')
+                        throw new Error('Failed to signup.');
                     }
-                    return res.json()
+                    return res.json();
                 })
+                .then((data) => {
+                    console.log('Server response:', data); // Log server response
+                    navigate('/sitters')
+                    // if (data.success) {
+                    //     navigate('/sitters');
+                    // } else {
+                    //     setErrorMessage(data.error || 'Signup failed.');
+                    // }
+                })
+                .catch((e) => {
+                    setErrorMessage(e.message);
+                    console.error('Network or server error:', e);
+                });
+
+            // fetch('http://localhost:5000/signup', {
+            //     method: 'POST',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+
+            //     },
+            //     body: JSON.stringify(values)
+            // })
+            //     .then(res => {
+            //         if (!res.ok) {
+            //             throw new Error('Failed to signup.')
+            //         }
+            //         return res.json()
+            //     })
 
 
-                .then(data => {
-                    if (data.error) {
-                        setErrorMessage(data.error)
-                    } else {
-                        console.log('User signed up successfully:', data)
-                        navigate('/sitters')
-                    }
-                })
+            //     .then(data => {
+            //         console.log('Server response',data)
 
-                .catch(e => {
-                    setErrorMessage(e.message)
-                    console.error('Network or server error', e)
-                })
+
+            //         if (data.success) {
+            //             navigate('/sitters')
+            //         } else {
+            //             setErrorMessage(data.error || 'Login failed.')
+                        
+            //         }
+
+                    
+            //     })
+
+            //     .catch(e => {
+            //         setErrorMessage(e.message)
+            //         console.error('Network or server error', e)
+            //     })
         }
     })
 
@@ -96,6 +133,7 @@ function SignupForm() {
                         value={formik.values.password}
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
+                        autoComplete='current-password'
                     />
                     {formik.errors.password && formik.touched.password && (
                         <div className='error'>{formik.errors.password}</div>

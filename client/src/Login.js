@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup';
 
 function LoginForm() {
+    const [errorMessage, setErrorMessage] = useState('')
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
     const navigate = useNavigate()
     const formik = useFormik({
@@ -19,7 +20,7 @@ function LoginForm() {
                 .required('Password is required.')
                 .min(8, 'Password must be at least 8 characters long.')
                 .matches(passwordPattern, 'Password must be at least 8 characters long and include at least 1 lowercase letter, 1 uppercase letter, and 1 special character (!@#$%^&*).'),
-            
+
         }),
 
         onSubmit: (values) => {
@@ -31,30 +32,54 @@ function LoginForm() {
                 },
                 body: JSON.stringify(values)
             })
-                .then(res => {
+                .then((res) => {
                     if (!res.ok) {
-                        throw new Error('Failed to loginn.')
+                        return res.json().then(e => {
+                            throw new Error(e.error || 'Failed to loginn.')
+                        })
+
                     }
                     return res.json()
                 })
-                .then((data) => {
-                    if(data.success){
-                        navigate('/sitters')
+
+                .then(data => {
+                    // console.log('Server response:', data)
+                    if (data.message === "Successful login.") {
+                        // console.log('Redirecting to sitters...')
+                        navigate('/sitters');
                     } else {
-                        alert(`Login failed: ${data.message}`)
+                        setErrorMessage(data.error || 'Login failed.');
                     }
-                    
+
+
+                    // console.log('Server response:', data); // Log server response
+                    // if (data.success) {
+                    //     navigate('/sitters'); // Redirect if login is successful
+                    // } else {
+                    //     setErrorMessage(data.error || 'Login failed.');
+                    // }
+                    //     if (data.success) {
+                    //         console.log('Server response:', data)
+
+                    //         navigate('/sitters')
+
+                    //     } else {
+                    //         setErrorMessage(data.error || 'Login failed')
+
+                    // }
                 })
 
-                .catch(e => console.error('Network or server error', e))
-
+                .catch(e => {
+                    setErrorMessage(e.message)
+                    console.error('Network or server error', e)
+                })
         }
-
-
     })
+
     return (
         <div>
             <h1>Login</h1>
+            {errorMessage && <div className='error'>{errorMessage}</div>}
 
             <form onSubmit={formik.handleSubmit}>
                 <div>
@@ -87,14 +112,14 @@ function LoginForm() {
                     )}
                 </div>
                 <br />
-                
+
                 <div><button type='submit'>login</button></div>
 
             </form>
 
 
 
-            
+
 
 
 
