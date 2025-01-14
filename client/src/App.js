@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'; // Import Brows
 
 import SignupForm from './Signup';
 import LoginForm from './Login';
+import Sitters from './Sitters'
 
 function App() {
     return (
@@ -11,7 +12,8 @@ function App() {
                 <h1>Hello, React!</h1>
                 <Routes>
                     <Route path="/signup" element={<SignupForm />} />
-                    <Route path="/login" element={<LoginForm/>} />
+                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/sitters" element={<Sitters/> } />
                 </Routes>
             </div>
         </BrowserRouter>

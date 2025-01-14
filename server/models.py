@@ -3,6 +3,7 @@ from sqlalchemy import ForeignKey
 
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+# from geopy.geocoders import GoogleV3
 from flask_bcrypt import Bcrypt
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.orm import validates
@@ -75,32 +76,47 @@ class PetSitter(db.Model, SerializerMixin):
             raise ValueError('Name is required and must be a string.')
         return name
     
-    
+    from geopy.geocoders import Nominatim
 
-    @validates('location')
-    def location_validate(self, key, location):
-        if not location or not isinstance(location, str):
-            raise ValueError('Location is required and must be a string.')
+def location_validate(self, location):
+    geolocator = Nominatim(user_agent="myGeocoder")
+    try:
+        geo_location = geolocator.geocode(location, timeout=10)  # Increased timeout to 10 seconds
+        if geo_location:
+            self.latitude = geo_location.latitude
+            self.longitude = geo_location.longitude
+        else:
+            raise ValueError("Unable to geocode the location.")
+    except GeocoderTimedOut:
+        raise ValueError("Geocoding service timed out.")
+    except Exception as e:
+        raise ValueError(f"An error occurred during geocoding: {e}")
 
-        # Geocoder instance
-        geolocator = Nominatim(user_agent="pet_app")
-        try:
-            geo_location = geolocator.geocode(location)
-            if not geo_location:
-                raise ValueError('Invalid location. Please provide a valid address.')
 
-        # Define the coordinates for Baton Rouge
-            lat_min, lat_max = 30.0, 30.7
-            lon_min, lon_max = -91.2, -91.1
+    # @validates('location')
+    # def location_validate(self, key, location):
+    #     if not location or not isinstance(location, str):
+    #         raise ValueError('Location is required and must be a string.')
 
-        # Check if the geolocation is within the bounding box for Baton Rouge
-            if not (lat_min <= geo_location.latitude <= lat_max) or not (lon_min <= geo_location.longitude <= lon_max):
-                raise ValueError('Location must be within the Baton Rouge area.')
+    #     # Geocoder instance
+    #     geolocator = Nominatim(user_agent="pet_app")
+    #     try:
+    #         geo_location = geolocator.geocode(location)
+    #         if not geo_location:
+    #             raise ValueError('Invalid location. Please provide a valid address.')
 
-        except GeocoderTimedOut:
-            raise ValueError('Address validation service timed out. Please try again later.')
+    #     # Define the coordinates for Baton Rouge
+    #         lat_min, lat_max = 30.0, 30.7
+    #         lon_min, lon_max = -91.2, -91.1
 
-        return location
+    #     # Check if the geolocation is within the bounding box for Baton Rouge
+    #         if not (lat_min <= geo_location.latitude <= lat_max) or not (lon_min <= geo_location.longitude <= lon_max):
+    #             raise ValueError('Location must be within the Baton Rouge area.')
+
+    #     except GeocoderTimedOut:
+    #         raise ValueError('Address validation service timed out. Please try again later.')
+
+    #     return location
     
     @validates('price')
     def price_validate(self, key, price):
