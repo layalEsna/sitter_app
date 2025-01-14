@@ -118,8 +118,15 @@ def sitters():
    if not pet_sitters:
       return jsonify({'error': 'Pet sitters not found.'}), 400
    return jsonify([sitter.to_dict() for sitter in pet_sitters]), 200
+
    
-   
+@app.route('/sitters/<int:id>')  
+def sitter(id):
+   pet_sitter = PetSitter.query.filter(PetSitter.id==id).first()
+   if not pet_sitter:
+      return jsonify({'error': 'Pet sitter not found'}), 400
+   return jsonify(pet_sitter.to_dict()), 200
+  
 
 # if __name__ == "__main__":
 #     app.run(debug=True, port=5000)
