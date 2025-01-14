@@ -1,9 +1,10 @@
 import React from 'react';
 import { useFormik } from 'formik';
-import { HashRouter, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup';
 
 function SignupForm() {
+    const navigate = useNavigate()
 
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*[!@#$%^&*]).{8,}$/;
 
@@ -43,12 +44,18 @@ function SignupForm() {
                     return res.json()
                 })
                 .then(data => console.log(data))
+                navigate('/sitters')
+
                 .catch(e => console.error('Network or server error', e))
 
         }
-
-
     })
+
+    // function handleSubmit(e) {
+    //     e.prevantDefault()
+    //     navigate('/sitters')
+    // }
+
     return (
         <div>
             <h1>Create an Acount</h1>
